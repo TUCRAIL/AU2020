@@ -2,6 +2,14 @@
 
 ## Introduction
 
+## Presenter
+Wouter Bulens
+Methods Coordinator / BIM Manager
+
+wouter.bulens@tucrail.be
+
+https://www.linkedin.com/in/wouter-bulens-11278319/
+
 ## Data
 
 In the [data](https://github.com/TUCRAIL/AU2020/tree/master/data) folder you will find the drawings and dynamo script used in the presentation. Feel free to adjust and play with them as you like.
