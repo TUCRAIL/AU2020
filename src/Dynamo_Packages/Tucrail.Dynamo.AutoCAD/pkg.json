@@ -1,0 +1,23 @@
+{
+  "license": "",
+  "file_hash": null,
+  "name": "Tucrail.Dynamo.AutoCAD",
+  "version": "1.1.0",
+  "description": "Tucrail dynamo package for AutoCAD",
+  "group": "",
+  "keywords": null,
+  "dependencies": [
+  ],
+  "host_dependencies": [
+  ],
+  "contents": "",
+  "engine_version": "2.4.1.1417",
+  "engine": "dynamo",
+  "engine_metadata": "",
+  "site_url": "",
+  "repository_url": "",
+  "contains_binaries": true,
+  "node_libraries": [
+    "Tucrail_Dynamo_AutoCAD, Version=1.0.0.0, Culture=neutral, PublicKeyToken=null"
+  ]
+}

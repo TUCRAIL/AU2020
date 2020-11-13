@@ -1,0 +1,31 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.29409.12
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tucrail.Dynamo.Civil", "Tucrail.Dynamo.Civil\Tucrail.Dynamo.Civil.csproj", "{FB3A83A1-9853-4929-8592-D18A0E65158C}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tucrail.Dynamo.AutoCAD", "Tucrail.Dynamo.AutoCAD\Tucrail.Dynamo.AutoCAD.csproj", "{1F6A3AC6-FC76-4E4F-9CFB-F696CD92726E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FB3A83A1-9853-4929-8592-D18A0E65158C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FB3A83A1-9853-4929-8592-D18A0E65158C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FB3A83A1-9853-4929-8592-D18A0E65158C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FB3A83A1-9853-4929-8592-D18A0E65158C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1F6A3AC6-FC76-4E4F-9CFB-F696CD92726E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1F6A3AC6-FC76-4E4F-9CFB-F696CD92726E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1F6A3AC6-FC76-4E4F-9CFB-F696CD92726E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1F6A3AC6-FC76-4E4F-9CFB-F696CD92726E}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {9B325955-C6E2-419C-A58A-B68E061D539C}
+	EndGlobalSection
+EndGlobal
