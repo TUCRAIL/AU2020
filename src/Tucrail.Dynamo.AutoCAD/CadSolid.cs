@@ -23,8 +23,9 @@ public class CadSolid : Object
     /// </summary>
     /// <param name="document"></param>
     /// <param name="crossSections"></param>
+    /// <param name="layer">set the layer for the solid (can be null)</param>
     /// <returns></returns>
-    public static CadSolid ByLoft(Document document, Polyline3D[] crossSections)
+    public static CadSolid ByLoft(Document document, Polyline3D[] crossSections, string layer)
     {
         if (document == null) return null;
         if (crossSections?.Any() != true) return null;
@@ -39,6 +40,9 @@ public class CadSolid : Object
             {
                 var polylines = crossSections.Select(o => (Polyline3d)o.InternalDBObject).ToArray();
                 solid.CreateLoftedSolid(polylines, new Entity[]{}, null, new LoftOptions());
+
+                if(string.IsNullOrWhiteSpace(layer))
+                    solid.Layer = layer;
             });
 
             using (var trans = db.TransactionManager.StartTransaction())
