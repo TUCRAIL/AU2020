@@ -1,0 +1,134 @@
+// inputs:
+//      station: current station
+//      x,y,z: location from alignment and profile
+//      tan_dir_x, tan_dir_y: 2D tangential direction from alignment
+//      instant_radius: instant radius at the point
+//      left_cant, right_cant: delta elevation from cant
+//      track_width: track width from alignment
+//      left_side: >0 true; <0 false
+//      track_gauge: track gauge
+//      do_logging: whether to do the logging, >0 true; <0 false.
+//  optional transition area rules:
+//      transition_count: count of transition zones.
+//      transition_start_stations: vector of stations, valid when it's in transition area
+//      transition_end_stations: vector of stations, valid when it's in transition area
+// outputs:
+//      calculated_x: calculated point x
+//      calculated_y: calculated point y
+//      calculated_z: calculated point z
+
+// grammar reference: https://github.com/ArashPartow/exprtk
+// notes:
+// 1) don't miss ':' before '='.
+// 2) don't miss ';' after the '}' of if/if-else/for clauses.
+// 3) 'h' and 'H' are the same variable name.
+// 4) don't rely on the vector size operator (vec[ ]) to determine the vector size.
+//    which is usually getting incorrect numbers. this is intentionally done for performance reasons.
+//    (exprtk doesn't support variable-length vector symbols unless you compile the script every time evaluating this.)
+
+var platform_dir_x := 0.0;
+var platform_dir_y := 0.0;
+
+var rail_delta_z := 0.0;
+var opposite_rail_delta_z := 0.0;
+
+var rail_side := 'low_side';
+
+var track_mid_point_x := 0.0;
+var track_mid_point_y := 0.0;
+var track_mid_point_z := 0.0;
+
+var gauge_angle_sin := 0.0;
+var gauge_angle_cos := 1.0;
+
+var gauge_point_x := 0.0;
+var gauge_point_y := 0.0;
+var gauge_point_z := 0.0;
+
+var h := 0.0;
+
+if (do_logging > 0) {
+    func_log_input_location(x, y, z);
+    func_log_cant_info(left_cant, right_cant);
+};
+
+// calculate track mid point.
+// calculate track gauge point.
+// calculate delta z between left and right gauge points.
+
+if (left_side > 0) {
+    platform_dir_x := -tan_dir_y;
+    platform_dir_y := tan_dir_x;
+
+    rail_delta_z := left_cant;
+    opposite_rail_delta_z := right_cant;
+}
+else {
+    platform_dir_x := tan_dir_y;
+    platform_dir_y := -tan_dir_x;
+
+    rail_delta_z := right_cant;
+    opposite_rail_delta_z := left_cant;
+};
+
+if (abs(rail_delta_z) <= 0.0 and abs(opposite_rail_delta_z) <= 0.0) {
+    rail_side := 'level';
+}
+else if (rail_delta_z > opposite_rail_delta_z) {
+    rail_side := 'high_side';
+}
+else {
+    rail_side := 'low_side';
+};
+
+if (do_logging > 0) {
+    func_log_string('Side', rail_side);
+};
+h := (abs(rail_delta_z) + abs(opposite_rail_delta_z));
+
+if (do_logging > 0) {
+    func_log_double('h', h);
+};
+track_mid_point_x := x;
+track_mid_point_y := y;
+track_mid_point_z := z + h * 0.5;
+
+gauge_angle_sin := (track_width > 0.0 ? clamp(-1.0, (rail_delta_z - opposite_rail_delta_z) / track_width, 1.0) : 0.0);
+gauge_angle_cos := sqrt(1.0 - gauge_angle_sin * gauge_angle_sin);
+
+gauge_point_x := track_mid_point_x + platform_dir_x * track_gauge * gauge_angle_cos * 0.5;
+gauge_point_y := track_mid_point_y + platform_dir_y * track_gauge * gauge_angle_cos * 0.5;
+gauge_point_z := track_mid_point_z + track_gauge * gauge_angle_sin * 0.5;
+
+var gauge_distance := sqrt(pow((gauge_point_x - track_mid_point_x),2)+pow((gauge_point_y - track_mid_point_y),2));
+var gauge_height := track_gauge * gauge_angle_sin * 0.5;
+
+if (do_logging > 0) {
+    func_log_double('Track z', track_mid_point_z);
+	func_log_double('Gauge distance', gauge_distance);
+	func_log_double('Gauge height', gauge_height);
+};
+
+var transition_horizontal_offset := 0.0;
+var transition_vertical_offset := 0.0;
+
+for (var i := 0; i < transition_count; i += 1) {
+	var ratio := func_linear_step(station, transition_start_stations[i], transition_end_stations[i]);
+	transition_horizontal_offset := func_mix(transition_start_offset[i], transition_end_offset[i], ratio);
+	transition_horizontal_offset := transition_horizontal_offset + (sin(0.5*(station - transition_start_stations[i])));
+	transition_vertical_offset := sin(0.5*(station - transition_start_stations[i]));
+};
+
+if (do_logging > 0) {
+    func_log_double('Transition Horizontal Offset', transition_horizontal_offset);
+	func_log_double('Transition Vertical Offset', transition_vertical_offset);
+};
+
+// set outputs.
+calculated_x := gauge_point_x + platform_dir_x * ( HorizontalOffset + transition_horizontal_offset);
+calculated_y := gauge_point_y + platform_dir_y * ( HorizontalOffset + transition_horizontal_offset);
+calculated_z := gauge_point_z + (VerticalOffset + transition_vertical_offset);
+
+if (do_logging > 0) {
+    func_log_calculated_location(calculated_x, calculated_y, calculated_z);
+};

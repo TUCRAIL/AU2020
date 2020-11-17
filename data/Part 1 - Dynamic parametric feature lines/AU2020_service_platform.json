@@ -1,0 +1,139 @@
+{
+    "name": "Service Platform Absolute Metric",
+    "version": "1.0.0",
+    "unit": "metric",
+    "unit_comments": "for metric, all numbers will be in meters; for imperial, all numbers will be in feet",
+	
+	"parameters": [
+        {
+            "name": "HorizontalOffset",
+            "display_name": "Horizontal Ofset",
+            "param_type": "number",
+            "param_unit": "meters",
+            "param_min_value": 0.0,
+			"param_max_value": 1.8e308,
+            "default_value": 0.0
+        },
+		{
+            "name": "VerticalOffset",
+            "display_name": "Vertical Ofset",
+            "param_type": "number",
+            "param_unit": "meters",
+            "param_min_value": 0.0,
+			"param_max_value": 1.8e308,
+            "default_value": 0.0
+        },
+		{
+			"name": "TransitionZone",
+            "display_name": "Transition Zone",
+            "param_type": "enum",
+            "enum_values": [
+                {
+                    "value": "No",
+                    "display_name": "No"
+                },
+                {
+                    "value": "Yes",
+                    "display_name": "Yes"
+                }
+            ],
+            "default_value": "No"		
+		},
+		{
+            "name": "TransitionOffset",
+            "display_name": "Transition Offset",
+            "param_type": "number",
+            "param_unit": "meters",
+            "param_min_value": 0.0,
+			"param_max_value": 1.8e308,
+            "default_value": 0.0
+        },
+		{
+            "name": "ZoneStartStation",
+            "display_name": "Zone Start Station",
+            "param_type": "number",
+            "param_unit": "meters",
+            "param_min_value": 0.0,
+			"param_max_value": 1.8e308,
+            "default_value": 0.0
+        },
+		{
+            "name": "ZoneLength",
+            "display_name": "Zone Length",
+            "param_type": "number",
+            "param_unit": "meters",
+            "param_min_value": 0.0,
+			"param_max_value": 1.8e308,
+            "default_value": 1.0
+        },
+		{
+            "name": "StartTransitionLength",
+            "display_name": "Start Transition Length",
+            "param_type": "number",
+            "param_unit": "meters",
+            "param_min_value": 0.0,
+			"param_max_value": 1.8e308,
+            "default_value": 1.0
+        },
+		{
+            "name": "EndTransitionLength",
+            "display_name": "End Transition Length",
+            "param_type": "number",
+            "param_unit": "meters",
+            "param_min_value": 0.0,
+			"param_max_value": 1.8e308,
+            "default_value": 1.0
+        }		
+    ],	
+
+    "transitions": [
+		{
+            "description": "Transition Zone within platform",
+            "condition": "TransitionZone == 'Yes'",
+            "ranges": [
+                {
+                    "range": [
+						"var Start := 0;",
+						"var End := 0;",
+						"Start := ZoneStartStation - StartTransitionLength;",
+						"End := ZoneStartStation;",
+						"start_station := Start;", 
+						"end_station := End;"
+					],
+                    "parameters": {
+						"transition_start_offset": "0",
+						"transition_end_offset": "TransitionOffset"
+                    }
+                },
+				{
+                    "range": [
+						"var Start := 0;",
+						"var End := 0;",
+						"Start := ZoneStartStation;",
+						"End := ZoneStartStation + ZoneLength;",
+						"start_station := Start;", 
+						"end_station := End;"
+					],
+                    "parameters": {
+						"transition_start_offset": "TransitionOffset",
+						"transition_end_offset": "TransitionOffset"
+                    }
+                },
+				{
+                    "range": [
+					"var Start := 0;",
+						"var End := 0;",
+						"Start := ZoneStartStation + ZoneLength;",
+						"End := ZoneStartStation + ZoneLength + EndTransitionLength;",
+						"start_station := Start;", 
+						"end_station := End;"
+					],
+                    "parameters": {
+						"transition_start_offset": "TransitionOffset",
+						"transition_end_offset": "0"
+                    }
+                }
+            ]
+        }
+    ]
+}
