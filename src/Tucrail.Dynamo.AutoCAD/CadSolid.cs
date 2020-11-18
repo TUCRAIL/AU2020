@@ -41,7 +41,7 @@ public class CadSolid : Object
                 var polylines = crossSections.Select(o => (Polyline3d)o.InternalDBObject).ToArray();
                 solid.CreateLoftedSolid(polylines, new Entity[]{}, null, new LoftOptions());
 
-                if(string.IsNullOrWhiteSpace(layer))
+                if(!string.IsNullOrWhiteSpace(layer))
                     solid.Layer = layer;
             });
 
